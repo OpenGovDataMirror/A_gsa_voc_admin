@@ -1,0 +1,84 @@
+<%  unless version_id.nil? %>
+  <% version = SurveyVersion.find(version_id) %>
+  <%= hidden_field_tag :search, params[:search] %>
+  <%= hidden_field_tag :order_column, @order_column_id %>
+  <%= hidden_field_tag :order_dir, @order_dir %>
+  <%= hidden_field_tag :page, params[:page] %>
+  <%= hidden_field_tag :custom_view_id, params[:custom_view_id] %>
+
+  <br/>
+  <div class="total_responses">
+    Displaying
+    <% offset = SurveyResponse.default_per_page * (params.fetch(:page,1).to_i - 1) + 1 %>
+    <% if objects.total_count > 0 %>
+      <%= "#{number_with_delimiter(offset)} - #{number_with_delimiter(offset + objects.count - 1)}" %>
+    <% else %>
+      0
+    <% end %>
+    of <%= number_with_delimiter(objects.total_count) %>
+  </div>
+  <div class="pageNav">
+    <div class="inline">
+      <%= form_tag survey_responses_path, :method => :get, :remote => true, :id => "simple_search_form" do %>
+        <%= hidden_field_tag :survey_version_id, version.id, :id => nil %>
+        <div class="hidden_label"><%= label_tag :simple_search, "Search:" %></div>
+        <%= text_field_tag :simple_search, params[:simple_search] %>
+        <%= submit_tag "Search" %>
+      <% end -%>
+    </div>
+    <%= link_to "Advanced Search", "javascript:void(0);", class: "manage",
+      onclick: "$('#advanced_search').toggle();return false" %>
+  </div>
+
+  <%= render partial: 'advanced_search', locals: { version: version } %>
+
+  <%= render partial: 'page_nav', locals: { version: version } %>
+
+  <div id="survey_response_table_div">
+    <table summary="this table is used to display the results of a survey">
+      <tr>
+        <th scope="col" class="col1">Delete/ Edit</th>
+        <th scope="col"><%= sortable_display_field 'id', 'ID' %></th>
+        <th scope="col"><%= sortable_display_field 'created_at', 'Date' %></th>
+        <th scope="col"><%= sortable_display_field 'page_url', 'Page URL' %></th>
+        <th scope="col"><%= sortable_display_field 'device', 'Device' %></th>
+
+        <%# TODO: REfactor this code!!! %>
+        <% (@custom_view || version).display_fields.order(:display_order).each do |df| %>
+          <th scope="col"><%= sortable_display_field df.name %></th>
+        <% end -%>
+      </tr>
+
+      <% objects.each do |sr| %>
+        <tr class="<%= cycle('gray','white')%> SurveyResponse">
+          <td class="col1">
+            <%= link_to image_tag("delete.png", :alt=>"Delete"), survey_response_path(sr, params.slice(*SurveyResponsesController::POST_PARAMS)), :method => :delete,
+              :remote => true, :data => {:confirm => "Please confirm"},
+              :class=>"deleteLink"
+            %>
+            <%= link_to image_tag("edit.png", :alt=>"edit"), edit_survey_response_path(sr.id, {:survey_id => version.survey_id}.merge(params.slice(*SurveyResponsesController::POST_PARAMS))) %>
+          </td>
+          <td><%= sr.id %></td>
+          <td><%= sr.created_at.in_time_zone.strftime("%m/%d/%Y - %T") %></td>
+          <td><%= sr.page_url %></td>
+          <td><%= sr.device %></td>
+          <% if @custom_view.present? %>
+            <% sr.display_field_values.joins(:display_field => :display_field_custom_views).where(:display_field_id => @custom_view.ordered_display_fields.map(&:id)).where("display_field_custom_views.custom_view_id = ?", @custom_view.id).order('display_field_custom_views.display_order ASC').each do |dfv| %>
+              <%= render 'display_field_value', :version => version, :dfv => dfv %>
+            <% end -%>
+          <% else %>
+            <% sr.display_field_values.joins(:display_field).order("display_fields.display_order asc").each do |dfv| %>
+              <%= render 'display_field_value', :version => version, :dfv => dfv %>
+            <% end -%>
+          <% end %>
+        </tr>
+      <% end -%>
+    </table>
+  </div>
+
+  <%= paginate objects, :remote => true, :params => @paginate_params || {} %>
+
+  <%= render partial: 'page_nav', locals: { version: version } %>
+
+  <div id="dfv_edit_modal" style="display: none;">&nbsp;</div>
+<% end %>

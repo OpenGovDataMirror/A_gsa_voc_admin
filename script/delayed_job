@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+require 'delayed/command'
+APP_PATH = File.expand_path '../../', __FILE__
+ARGV << "--pid-dir=#{APP_PATH}/tmp/pids"
+Delayed::Command.new(ARGV).daemonize

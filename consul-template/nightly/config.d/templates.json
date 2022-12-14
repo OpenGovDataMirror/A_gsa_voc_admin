@@ -1,0 +1,5 @@
+template {
+  source = "/consul-template/templates/dotenv.ctmpl"
+  destination = "/voc/.env"
+  command = "/bin/true"
+}

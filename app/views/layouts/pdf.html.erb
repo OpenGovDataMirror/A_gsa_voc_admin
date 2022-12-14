@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>GSA VOC Tool Application</title>
+
+    <link href="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/application.css" %>" media="screen" rel="stylesheet" />
+    <link href="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/simplemodal.css" %>" media="screen" rel="stylesheet" />
+    <link href="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery-ui.min.css" %>" media="screen" rel="stylesheet" />
+    <link href="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/stylesheets/pdf.css" %>" media="screen" rel="stylesheet" />
+
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery.autosize.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/best_in_place.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery_ujs.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery.simplemodal.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/jquery.ui.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/best_in_place.jquery-ui.self.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/assets/application.self.js" %>"></script>
+    <!--[if lte IE 8]><script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/javascripts/excanvas.min.js" %>"></script><![endif]-->
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/javascripts/jquery.flot.min.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/javascripts/jquery.flot.pie.min.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/javascripts/jquery.flot.time.js" %>"></script>
+    <script src="<%= "#{request.protocol}#{ENV.fetch('APP_ADMIN_HOST_PORT')}/javascripts/jqcloud-1.0.4.min.js" %>"></script>
+    <script src="https://www.google.com/jsapi"></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="content">
+        <%= yield %>
+      </div>
+    </div>
+    <%= yield :script %>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>GSA VOC Tool Application</title>
+
+    <%= stylesheet_link_tag main_stylesheet_location %>
+    <%= javascript_include_tag "application" %>
+    <%= yield :head %>
+    <%= csrf_meta_tag %>
+
+    <!-- Community Imports -->
+    <%= yield :additional_scripts %>
+
+  </head>
+  <body>
+    <div id="container">
+      <%# Dynamic header view partial. See: app/helpers/layout_helper.rb %>
+      <%= render :partial => header_partial_location %>
+      <% if !current_user.blank? %>
+        <%= render :partial => 'layouts/navigation' %>
+      <% end %>
+      <a name="skip"></a>
+
+      <!-- begin main content for intranet page -->
+      <div id="content">
+        <%= yield %>
+      </div>
+      <!-- end main content for intranet page -->
+
+      <%# Dynamic footer view partial. See: app/helpers/layout_helper.rb %>
+      <%= render :partial => footer_partial_location %>
+    </div>
+    <%= javascript_tag do %>
+      $(document).ajaxSend(function(e, xhr, options) {
+        var token = jQuery("meta[name='csrf-token']").attr("content");
+        xhr.setRequestHeader("X-CSRF-Token", token);
+      });
+    <% end %>
+    <%= yield :script %>
+  </body>
+</html>

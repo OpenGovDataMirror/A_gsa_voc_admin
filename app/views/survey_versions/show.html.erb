@@ -1,0 +1,31 @@
+<h1>Preview Survey</h1>
+
+<div id="surveys">
+  <div class="left_side">
+    Survey:
+  </div>
+  <div class="right_side">
+    <p class="blue"><%= @survey.name.titleize %></p>
+  </div>
+  <br />
+  <div class="left_side">
+    Version:
+  </div>
+  <div class="right_side">
+    <p class="version"><%= "#{@survey_version.major}.#{@survey_version.minor}" %></p>
+  </div>
+</div>
+
+<%= render 'survey_version' %>
+
+<div class="page-nav">
+  <% unless @survey_version.published %>
+    <%= link_to image_tag("edit.png", :alt=>"edit") + " Edit", edit_survey_survey_version_path(@survey, @survey_version), :class=>"manage" %>
+  <% end -%>
+  <% if @survey_version.published %>
+    <%= link_to image_tag("published.png", :alt=>"published") + " Published", unpublish_survey_survey_version_path(@survey, @survey_version), :confirm => "Are you sure you wish to remove this survey from the public site", :class=>"manage" %>
+  <% else %>
+     <%= link_to image_tag("not_published.png", :alt=>"not published") + " Publish", publish_survey_survey_version_path(@survey, @survey_version), :confirm => "Are you sure?", :class=>"manage" %>
+  <% end %>
+  <%= link_to 'View All Versions', survey_survey_versions_path(@survey), :class=>"manage" %>
+</div>
